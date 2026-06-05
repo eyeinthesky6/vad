@@ -1,0 +1,13 @@
+{
+  "entities": [
+    { "type": "organization", "name": "Example Services Pvt Ltd", "role": "issuer" },
+    { "type": "organization", "name": "Example Client", "role": "recipient" },
+    { "type": "amount", "value": 50000, "currency": "INR" }
+  ],
+  "claims": [
+    { "id": "claim_001", "type": "amount_due", "text": "Example Client owes INR 50,000", "source": "content.md" }
+  ],
+  "dates": [
+    { "type": "due_date", "value": "2026-06-15" }
+  ]
+}

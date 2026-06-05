@@ -1,0 +1,12 @@
+{
+  "entities": [
+    { "type": "project", "name": "Example Rail Siding Infrastructure Work" },
+    { "type": "amount", "value": 200000, "currency": "INR", "label": "EMD" }
+  ],
+  "dates": [
+    { "type": "submission_deadline", "value": "2026-07-01" }
+  ],
+  "obligations": [
+    { "actor": "bidder", "action": "submit_required_documents", "deadline": "2026-07-01" }
+  ]
+}

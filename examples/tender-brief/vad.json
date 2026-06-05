@@ -1,0 +1,16 @@
+{
+  "vad_version": "0.1",
+  "document_id": "vad:example:tender-brief",
+  "title": "Tender Brief",
+  "document_type": "tender",
+  "version": "0.1.0",
+  "state": "draft",
+  "created_at": "2026-06-05T12:00:00+05:30",
+  "files": {
+    "content": "content.md",
+    "semantics": "semantics.json",
+    "policy": "policy.json",
+    "provenance": "provenance.json",
+    "signature": "signature.json"
+  }
+}

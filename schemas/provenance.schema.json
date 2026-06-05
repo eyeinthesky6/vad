@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vad-format.org/schemas/provenance.schema.json",
+  "title": "VAD Provenance",
+  "type": "object",
+  "properties": {
+    "created_by": { "type": "object" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "tools_used": { "type": "array", "items": { "type": "string" } },
+    "source_materials": { "type": "array", "items": { "type": "object" } },
+    "edit_history": { "type": "array", "items": { "type": "object" } }
+  }
+}

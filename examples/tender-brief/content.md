@@ -1,0 +1,1 @@
+# Tender Brief\n\nTender: Example Rail Siding Infrastructure Work\n\nSubmission deadline: 2026-07-01\n\nEMD: INR 2,00,000\n\nRequired documents: company registration, financial statements, technical capability statement.

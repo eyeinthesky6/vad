@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vad-format.org/schemas/policy.schema.json",
+  "title": "VAD Agent Policy",
+  "type": "object",
+  "required": ["actions", "trust_rules"],
+  "properties": {
+    "actions": {
+      "type": "object",
+      "additionalProperties": {
+        "enum": ["allowed", "forbidden", "requires_human_review", "warn_only"]
+      }
+    },
+    "trust_rules": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    }
+  }
+}

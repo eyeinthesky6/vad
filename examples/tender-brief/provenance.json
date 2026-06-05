@@ -1,0 +1,15 @@
+{
+  "created_by": {
+    "type": "example",
+    "name": "VAD contributors"
+  },
+  "created_at": "2026-06-05T12:00:00+05:30",
+  "tools_used": ["manual example"],
+  "source_materials": [],
+  "edit_history": [
+    {
+      "actor": "human",
+      "action": "created preliminary example"
+    }
+  ]
+}

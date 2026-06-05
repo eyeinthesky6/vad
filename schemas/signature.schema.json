@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vad-format.org/schemas/signature.schema.json",
+  "title": "VAD Signature Metadata",
+  "type": "object",
+  "properties": {
+    "hash_algorithm": { "type": "string" },
+    "hashes": { "type": "object", "additionalProperties": { "type": "string" } },
+    "document_hash": { "type": "string" },
+    "signature_format": { "type": "string" },
+    "signature": { "type": "string" },
+    "signed_by": { "type": "string" },
+    "signed_at": { "type": "string", "format": "date-time" },
+    "status": { "enum": ["placeholder", "valid", "invalid", "unsupported"] }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "entities": [
+    { "type": "party", "name": "client" },
+    { "type": "party", "name": "service provider" },
+    { "type": "amount", "value": 50000, "currency": "INR" }
+  ],
+  "obligations": [
+    { "actor": "client", "action": "pay", "amount": "INR 50000", "deadline": "seven working days after invoice receipt", "source": "content.md" }
+  ],
+  "claims": [
+    { "id": "claim_001", "type": "payment_obligation", "text": "Client must pay within seven working days of invoice receipt." }
+  ]
+}

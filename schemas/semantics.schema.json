@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vad-format.org/schemas/semantics.schema.json",
+  "title": "VAD Semantics",
+  "type": "object",
+  "properties": {
+    "entities": { "type": "array", "items": { "type": "object" } },
+    "claims": { "type": "array", "items": { "type": "object" } },
+    "obligations": { "type": "array", "items": { "type": "object" } },
+    "dates": { "type": "array", "items": { "type": "object" } },
+    "citations": { "type": "array", "items": { "type": "object" } },
+    "glossary": { "type": "array", "items": { "type": "object" } }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "actions": {
+    "summarize": "allowed",
+    "translate": "allowed",
+    "extract_tasks": "allowed",
+    "extract_claims": "allowed",
+    "compare_versions": "allowed",
+    "execute_external_action": "forbidden",
+    "legal_interpretation": "requires_human_review",
+    "financial_action": "forbidden"
+  },
+  "trust_rules": {
+    "if_tampered": "read_only_untrusted",
+    "if_unsigned": "warn_user",
+    "if_unknown_signer": "warn_user"
+  }
+}

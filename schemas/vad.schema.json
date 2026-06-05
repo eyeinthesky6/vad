@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vad-format.org/schemas/vad.schema.json",
+  "title": "VAD Manifest",
+  "type": "object",
+  "required": ["vad_version", "document_id", "title", "document_type", "state", "files"],
+  "properties": {
+    "vad_version": { "type": "string" },
+    "document_id": { "type": "string" },
+    "title": { "type": "string" },
+    "document_type": { "type": "string" },
+    "version": { "type": "string" },
+    "state": { "enum": ["draft", "sealed", "amended", "tampered", "untrusted"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "files": {
+      "type": "object",
+      "required": ["content", "semantics", "policy", "provenance", "signature"],
+      "properties": {
+        "content": { "type": "string" },
+        "semantics": { "type": "string" },
+        "policy": { "type": "string" },
+        "provenance": { "type": "string" },
+        "signature": { "type": "string" }
+      }
+    }
+  }
+}

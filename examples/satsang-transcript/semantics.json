@@ -1,0 +1,12 @@
+{
+  "entities": [
+    { "type": "speaker", "name": "Example Teacher" },
+    { "type": "source", "name": "satsang-example.mp3" }
+  ],
+  "claims": [
+    { "id": "claim_001", "type": "teaching", "text": "Practice supports clarity within life.", "source": "content.md" }
+  ],
+  "glossary": [
+    { "term": "sadhana", "meaning": "spiritual practice", "language": "Sanskrit" }
+  ]
+}
