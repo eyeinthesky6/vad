@@ -1,0 +1,13 @@
+{
+  "results": [
+    {
+      "check_id": "javascript.express.audit.origin-guard",
+      "path": "src/app/api/payments/route.ts",
+      "start": { "line": 42 },
+      "extra": {
+        "severity": "HIGH",
+        "message": "Route mutates payment state without explicit request guard"
+      }
+    }
+  ]
+}
