@@ -8,10 +8,10 @@ function writeDemoReports(dir) {
   fs.writeFileSync(path.join(dir, 'semgrep.json'), JSON.stringify({
     results: [
       {
-        check_id: 'javascript.express.audit.origin-guard',
+        check_id: 'project.rule.request-guard',
         path: 'src/app/api/payments/route.ts',
         start: { line: 42 },
-        extra: { severity: 'HIGH', message: 'Route mutates payment state without explicit request guard' }
+        extra: { severity: 'HIGH', message: 'Route mutates important state without explicit guard' }
       }
     ]
   }, null, 2));
@@ -20,8 +20,8 @@ function writeDemoReports(dir) {
       {
         format: 'typescript',
         lines: 64,
-        firstFile: { name: 'src/auth/login.ts', start: 12 },
-        secondFile: { name: 'src/auth/signin.ts', start: 10 }
+        firstFile: { name: 'src/shared/customerFormA.ts', start: 12 },
+        secondFile: { name: 'src/shared/customerFormB.ts', start: 10 }
       }
     ]
   }, null, 2));
@@ -41,6 +41,27 @@ function writeDemoReports(dir) {
     'src/components/AuthGate.tsx',
     '  11:7  error  React Hook useEffect has a missing dependency  react-hooks/exhaustive-deps'
   ].join('\n'));
+  fs.writeFileSync(path.join(dir, 'npm-audit.json'), JSON.stringify({
+    vulnerabilities: {
+      examplepkg: { severity: 'high', fixAvailable: true }
+    }
+  }, null, 2));
+  fs.writeFileSync(path.join(dir, 'tool.sarif'), JSON.stringify({
+    version: '2.1.0',
+    runs: [
+      {
+        tool: { driver: { name: 'GenericScanner', rules: [{ id: 'project/rule', name: 'Project rule' }] } },
+        results: [
+          {
+            ruleId: 'project/rule',
+            level: 'warning',
+            message: { text: 'Project rule matched this file' },
+            locations: [{ physicalLocation: { artifactLocation: { uri: 'src/app/page.tsx' }, region: { startLine: 20 } } }]
+          }
+        ]
+      }
+    ]
+  }, null, 2));
 }
 
 module.exports = { writeDemoReports };
