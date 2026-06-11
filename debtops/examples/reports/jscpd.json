@@ -1,0 +1,10 @@
+{
+  "duplicates": [
+    {
+      "format": "typescript",
+      "lines": 64,
+      "firstFile": { "name": "src/shared/customerFormA.ts", "start": 12 },
+      "secondFile": { "name": "src/shared/customerFormB.ts", "start": 10 }
+    }
+  ]
+}
