@@ -17,7 +17,22 @@
     "audit": "node src/cli.js audit",
     "demo": "node src/cli.js demo",
     "init": "node src/cli.js init",
-    "test": "node --test tests/*.test.js"
+    "smoke": "node src/cli.js demo",
+    "test": "node --test tests/*.test.js",
+    "pack:dry": "npm pack --dry-run",
+    "prepublishOnly": "npm test && npm run pack:dry"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eyeinthesky6/vad.git",
+    "directory": "debtops"
+  },
+  "bugs": {
+    "url": "https://github.com/eyeinthesky6/vad/issues"
+  },
+  "homepage": "https://github.com/eyeinthesky6/vad/tree/main/debtops#readme",
+  "publishConfig": {
+    "access": "public"
   },
   "keywords": [
     "technical-debt",
