@@ -27,17 +27,18 @@ Put any of these under `reports/`:
 
 ## Usage
 
-```bash
-cd your-repo
-npx debtops audit --reports reports
-```
-
-For this repo-local prototype:
+This folder is currently a repo-local prototype, not an npm-published package yet.
 
 ```bash
 cd debtops
 node src/cli.js demo
 node src/cli.js audit --reports examples/reports
+```
+
+After publishing to npm, the intended command becomes:
+
+```bash
+npx debtops audit --reports reports
 ```
 
 ## Example fix packet
