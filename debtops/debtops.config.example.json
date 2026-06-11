@@ -1,0 +1,17 @@
+{
+  "reportsDir": "reports",
+  "outputDir": "docs/audit/debtops",
+  "limit": 20,
+  "coverageThreshold": 0.7,
+  "defaultOwner": "@unassigned",
+  "issueLabels": ["debtops", "technical-debt"],
+  "riskThresholds": {
+    "high": 18,
+    "medium": 9
+  },
+  "pathWeights": [
+    { "pattern": "src/app|pages|routes|api", "weight": 3 },
+    { "pattern": "auth|payment|billing|broker|order|trade|risk|ledger|security|policy", "weight": 4 },
+    { "pattern": "test|spec|fixture|mock|demo|example", "weight": -2 }
+  ]
+}
