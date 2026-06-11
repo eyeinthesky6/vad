@@ -4,13 +4,16 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const {
   parseSemgrepJson,
+  parseSarifJson,
   parseJscpdJson,
   parseRadonCc,
   parseCoverageXml,
   parseEslintText,
-  parseTscText
+  parseTscText,
+  parseNpmAuditJson
 } = require('../src/lib/parsers');
 const { rankPackets } = require('../src/lib/triage');
+const { parseCodeowners, inferOwner } = require('../src/lib/owners');
 
 test('parses semgrep json', () => {
   const findings = parseSemgrepJson(JSON.stringify({
@@ -23,6 +26,23 @@ test('parses semgrep json', () => {
   }));
   assert.equal(findings.length, 1);
   assert.equal(findings[0].kind, 'security');
+  assert.equal(findings[0].file, 'src/a.ts');
+});
+
+test('parses sarif json', () => {
+  const findings = parseSarifJson(JSON.stringify({
+    runs: [{
+      tool: { driver: { name: 'GenericScanner', rules: [{ id: 'rule/a', name: 'Rule A' }] } },
+      results: [{
+        ruleId: 'rule/a',
+        level: 'warning',
+        message: { text: 'rule matched' },
+        locations: [{ physicalLocation: { artifactLocation: { uri: 'src/a.ts' }, region: { startLine: 8 } } }]
+      }]
+    }]
+  }));
+  assert.equal(findings.length, 1);
+  assert.equal(findings[0].tool, 'GenericScanner');
   assert.equal(findings[0].file, 'src/a.ts');
 });
 
@@ -50,9 +70,11 @@ test('parses coverage xml below threshold', () => {
   assert.equal(findings[0].kind, 'coverage');
 });
 
-test('parses eslint stylish and tsc compact output', () => {
+test('parses eslint stylish, eslint json, tsc, and npm audit', () => {
   assert.equal(parseEslintText('src/a.ts\n  1:2  error  nope  no-rule').length, 1);
+  assert.equal(parseEslintText(JSON.stringify([{ filePath: 'src/a.ts', messages: [{ line: 1, severity: 2, message: 'nope', ruleId: 'x' }] }])).length, 1);
   assert.equal(parseTscText('src/a.ts(1,2): error TS2322: Type mismatch').length, 1);
+  assert.equal(parseNpmAuditJson(JSON.stringify({ vulnerabilities: { examplepkg: { severity: 'high', fixAvailable: true } } })).length, 1);
 });
 
 test('ranks packets by grouped file risk', () => {
@@ -62,4 +84,11 @@ test('ranks packets by grouped file risk', () => {
   ]);
   assert.equal(packets[0].file, 'src/app/api/payments/route.ts');
   assert.equal(packets[0].risk, 'high');
+});
+
+test('infers owner from CODEOWNERS rules', () => {
+  const rules = parseCodeowners('src/app/** @app-team\nsrc/risk/** @risk-team');
+  assert.equal(inferOwner('src/app/page.tsx', rules), '@app-team');
+  assert.equal(inferOwner('src/risk/policy.py', rules), '@risk-team');
+  assert.equal(inferOwner('README.md', rules, '@fallback'), '@fallback');
 });
