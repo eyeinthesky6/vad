@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.0
+
+- Added config loading from `debtops.config.json` and `.debtopsrc.json`.
+- Added `init` command to create local config and reports directory.
+- Added CODEOWNERS-based owner inference.
+- Added SARIF, ESLint JSON, and npm audit parsing.
+- Added dependency finding kind and configurable risk thresholds.
+- Added HTML report output.
+- Added GitHub issue body generation and `create-github-issues.sh` helper.
+- Added per-packet reproduce commands.
+- Expanded demo reports and tests.
+
 ## 0.1.0
 
 - Added dependency-free Node CLI.
