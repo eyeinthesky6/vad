@@ -1,20 +1,30 @@
 {
   "name": "debtops",
-  "version": "0.1.0",
-  "description": "Turn static-analysis noise into safe, reviewable fix packets for AI-built codebases.",
+  "version": "0.2.0",
+  "description": "Turn static-analysis noise into owner-routed, reviewable fix packets for AI-built codebases.",
   "type": "commonjs",
   "bin": {
     "debtops": "src/cli.js"
   },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "debtops.config.example.json"
+  ],
   "scripts": {
     "audit": "node src/cli.js audit",
     "demo": "node src/cli.js demo",
+    "init": "node src/cli.js init",
     "test": "node --test tests/*.test.js"
   },
   "keywords": [
     "technical-debt",
     "code-audit",
     "static-analysis",
+    "sarif",
+    "codeowners",
     "ai-code",
     "developer-tools"
   ],
