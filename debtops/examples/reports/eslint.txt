@@ -1,0 +1,2 @@
+src/components/AuthGate.tsx
+  11:7  error  React Hook useEffect has a missing dependency  react-hooks/exhaustive-deps
