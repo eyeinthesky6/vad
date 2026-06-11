@@ -22,11 +22,15 @@ function addFinding(findings, finding) {
   });
 }
 
+function parseJson(text) {
+  try { return JSON.parse(text); } catch (_) { return null; }
+}
+
 function parseSemgrepJson(text) {
   const findings = [];
   if (!text || !text.trim()) return findings;
-  let data;
-  try { data = JSON.parse(text); } catch (_) { return findings; }
+  const data = parseJson(text);
+  if (!data) return findings;
   for (const item of data.results || []) {
     const extra = item.extra || {};
     addFinding(findings, {
@@ -44,11 +48,42 @@ function parseSemgrepJson(text) {
   return findings;
 }
 
+function parseSarifJson(text) {
+  const findings = [];
+  if (!text || !text.trim()) return findings;
+  const data = parseJson(text);
+  if (!data || !Array.isArray(data.runs)) return findings;
+  for (const run of data.runs) {
+    const toolName = run.tool && run.tool.driver && run.tool.driver.name ? run.tool.driver.name : 'sarif';
+    const rules = new Map((run.tool && run.tool.driver && run.tool.driver.rules || []).map(rule => [rule.id, rule]));
+    for (const result of run.results || []) {
+      const location = result.locations && result.locations[0] && result.locations[0].physicalLocation;
+      const artifact = location && location.artifactLocation;
+      const file = artifact && (artifact.uri || artifact.uriBaseId);
+      if (!file) continue;
+      const rule = rules.get(result.ruleId) || {};
+      const level = result.level || rule.defaultConfiguration && rule.defaultConfiguration.level || 'warning';
+      addFinding(findings, {
+        tool: toolName,
+        kind: sarifKind(toolName, result.ruleId),
+        file,
+        line: location.region && location.region.startLine,
+        title: (result.message && result.message.text) || rule.name || result.ruleId || 'SARIF finding',
+        message: (result.message && result.message.text) || rule.fullDescription && rule.fullDescription.text || '',
+        severity: sarifSeverity(level),
+        rawScore: severityWeight(level) + 1,
+        evidence: result.ruleId || ''
+      });
+    }
+  }
+  return findings;
+}
+
 function parseJscpdJson(text) {
   const findings = [];
   if (!text || !text.trim()) return findings;
-  let data;
-  try { data = JSON.parse(text); } catch (_) { return findings; }
+  const data = parseJson(text);
+  if (!data) return findings;
   const duplicates = data.duplicates || data.clones || [];
   for (const clone of duplicates) {
     const first = clone.firstFile || clone.first || clone.a || {};
@@ -126,9 +161,34 @@ function parseCoverageXml(text, threshold = 0.7) {
   return findings;
 }
 
+function parseEslintJson(text) {
+  const findings = [];
+  if (!text || !text.trim()) return findings;
+  const data = parseJson(text);
+  if (!Array.isArray(data)) return findings;
+  for (const fileReport of data) {
+    for (const message of fileReport.messages || []) {
+      addFinding(findings, {
+        tool: 'eslint',
+        kind: 'lint',
+        file: fileReport.filePath,
+        line: message.line,
+        title: message.message,
+        message: `${message.severity === 2 ? 'error' : 'warning'} ${message.ruleId || ''}`.trim(),
+        severity: message.severity === 2 ? 'high' : 'medium',
+        rawScore: message.severity === 2 ? 4 : 2,
+        evidence: message.ruleId || ''
+      });
+    }
+  }
+  return findings;
+}
+
 function parseEslintText(text) {
   const findings = [];
   if (!text) return findings;
+  const jsonFindings = parseEslintJson(text);
+  if (jsonFindings.length) return jsonFindings;
   const lines = text.split(/\r?\n/);
   let currentFile = null;
   for (const line of lines) {
@@ -191,6 +251,27 @@ function parseTscText(text) {
   return findings;
 }
 
+function parseNpmAuditJson(text) {
+  const findings = [];
+  if (!text || !text.trim()) return findings;
+  const data = parseJson(text);
+  if (!data) return findings;
+  const vulnerabilities = data.vulnerabilities || {};
+  for (const [pkg, vuln] of Object.entries(vulnerabilities)) {
+    addFinding(findings, {
+      tool: 'npm-audit',
+      kind: 'dependency',
+      file: 'package.json',
+      title: `Dependency vulnerability: ${pkg}`,
+      message: `${vuln.severity || 'unknown'} severity dependency issue${vuln.fixAvailable ? ' with fix available' : ''}`,
+      severity: String(vuln.severity || 'medium').toLowerCase(),
+      rawScore: severityWeight(vuln.severity || 'medium') + (vuln.fixAvailable ? 1 : 0),
+      evidence: pkg
+    });
+  }
+  return findings;
+}
+
 function parseGenericText(text, tool = 'generic') {
   const findings = [];
   if (!text) return findings;
@@ -210,23 +291,41 @@ function parseGenericText(text, tool = 'generic') {
   return findings;
 }
 
+function sarifKind(toolName, ruleId) {
+  const combined = `${toolName || ''} ${ruleId || ''}`.toLowerCase();
+  if (/security|semgrep|codeql|secret|vulnerab|injection|xss|csrf/.test(combined)) return 'security';
+  if (/eslint|lint/.test(combined)) return 'lint';
+  return 'generic';
+}
+
+function sarifSeverity(level) {
+  const s = String(level || '').toLowerCase();
+  if (s === 'error') return 'high';
+  if (s === 'warning') return 'medium';
+  if (s === 'note' || s === 'none') return 'low';
+  return s || 'medium';
+}
+
 function severityWeight(severity) {
   const s = String(severity || '').toLowerCase();
   if (['critical', 'error'].includes(s)) return 9;
   if (['high'].includes(s)) return 7;
   if (['warning', 'medium', 'moderate'].includes(s)) return 4;
-  if (['info', 'low'].includes(s)) return 2;
+  if (['info', 'low', 'note'].includes(s)) return 2;
   return 3;
 }
 
 module.exports = {
   normalizePath,
   parseSemgrepJson,
+  parseSarifJson,
   parseJscpdJson,
   parseRadonCc,
   parseCoverageXml,
+  parseEslintJson,
   parseEslintText,
   parseTscText,
+  parseNpmAuditJson,
   parseGenericText,
   severityWeight
 };
