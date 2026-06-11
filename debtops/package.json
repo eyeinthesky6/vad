@@ -1,0 +1,26 @@
+{
+  "name": "debtops",
+  "version": "0.1.0",
+  "description": "Turn static-analysis noise into safe, reviewable fix packets for AI-built codebases.",
+  "type": "commonjs",
+  "bin": {
+    "debtops": "src/cli.js"
+  },
+  "scripts": {
+    "audit": "node src/cli.js audit",
+    "demo": "node src/cli.js demo",
+    "test": "node --test tests/*.test.js"
+  },
+  "keywords": [
+    "technical-debt",
+    "code-audit",
+    "static-analysis",
+    "ai-code",
+    "developer-tools"
+  ],
+  "author": "SeDroid / eyeinthesky6",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}
