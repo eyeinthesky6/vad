@@ -4,11 +4,13 @@ const fs = require('fs');
 const path = require('path');
 const {
   parseSemgrepJson,
+  parseSarifJson,
   parseJscpdJson,
   parseRadonCc,
   parseCoverageXml,
   parseEslintText,
   parseTscText,
+  parseNpmAuditJson,
   parseGenericText
 } = require('./parsers');
 
@@ -30,15 +32,17 @@ function listFiles(dir) {
       else out.push(full);
     }
   }
-  return out;
+  return out.sort();
 }
 
 function parseReportFile(filePath, options = {}) {
   const text = safeRead(filePath);
   if (text === null) return [];
   const normalized = filePath.replace(/\\/g, '/').toLowerCase();
+  if (normalized.endsWith('.sarif') || normalized.endsWith('.sarif.json')) return parseSarifJson(text);
   if (normalized.includes('semgrep') && normalized.endsWith('.json')) return parseSemgrepJson(text);
   if (normalized.includes('jscpd') && normalized.endsWith('.json')) return parseJscpdJson(text);
+  if (normalized.includes('npm-audit') || normalized.includes('npm_audit') || normalized.includes('audit.json')) return parseNpmAuditJson(text);
   if (normalized.includes('radon') && normalized.includes('cc')) return parseRadonCc(text);
   if (normalized.includes('coverage') && normalized.endsWith('.xml')) return parseCoverageXml(text, options.coverageThreshold);
   if (normalized.includes('eslint')) return parseEslintText(text);
