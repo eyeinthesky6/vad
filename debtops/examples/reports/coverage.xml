@@ -1,0 +1,5 @@
+<coverage line-rate="0.71">
+  <packages><package name="src"><classes>
+    <class filename="src/ledger/journal.py" line-rate="0.41"/>
+  </classes></package></packages>
+</coverage>
